@@ -2,4 +2,7 @@
     <string name="app_name">Simple API App</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="please_check_connection">Please check your connection and try again.</string>
+    <string name="an_error_occured">An error occured.</string>
+    <string name="loading">Loading...</string>
 </resources>
