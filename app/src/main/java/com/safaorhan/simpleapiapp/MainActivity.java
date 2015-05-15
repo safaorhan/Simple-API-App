@@ -9,6 +9,8 @@ import android.widget.ListView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import org.apache.http.Header;
 import org.json.JSONException;
@@ -24,6 +26,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
+
         setContentView(R.layout.activity_main);
 
         // If we're being restored from a previous state,
@@ -90,12 +97,14 @@ public class MainActivity extends ActionBarActivity {
         ListFragment listFragment = new ListFragment();
 
         Bundle args = new Bundle();
-        args.putString(Const.ARG_DATA, data.toString());
+        args.putString(Const.ARG_DATA, data);
 
         listFragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, listFragment).commit();
+                .replace(R.id.fragment_container, listFragment).commit();
+
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     public void showBlankScreen(String message, boolean hasRetryButton)
@@ -109,7 +118,9 @@ public class MainActivity extends ActionBarActivity {
         blankFragment.setArguments(args);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, blankFragment).commit();
+                .replace(R.id.fragment_container, blankFragment).commit();
+
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     public void showDetailScreen(String data)
@@ -117,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         DetailsFragment detailsFragment = new DetailsFragment();
 
         Bundle args = new Bundle();
-        args.putString(Const.ARG_DATA, data.toString());
+        args.putString(Const.ARG_DATA, data);
 
         detailsFragment.setArguments(args);
 
@@ -127,6 +138,8 @@ public class MainActivity extends ActionBarActivity {
         transaction.addToBackStack(null);
 
         transaction.commit();
+
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     private String extractDataFromJSON(JSONObject response) throws JSONException {

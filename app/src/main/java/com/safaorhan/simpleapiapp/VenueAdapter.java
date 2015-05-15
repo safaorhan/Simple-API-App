@@ -1,26 +1,26 @@
 package com.safaorhan.simpleapiapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-/**
- * Created by safa on 14/05/15.
- */
+
 public class VenueAdapter extends BaseAdapter {
 
     JSONArray venues = null;
 
-    Context context;
+    Context mContext;
 
-    public VenueAdapter(Context context, String data)
-    {
-        this.context = context;
+    public VenueAdapter(Context context, String data) {
+        mContext = context;
         try {
             this.venues = new JSONArray(data);
         } catch (JSONException e) {
@@ -81,7 +81,34 @@ public class VenueAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        //TODO implement using convertView and venue data
+        //Note: No need to use view holder pattern here, since the data is minimal.
+
+        TextView textName, textRating;
+
+        JSONObject item;
+        String name = "";
+        double rating = -1;
+
+        try {
+            item = venues.getJSONObject(position).getJSONObject("venue");
+            name = item.getString("name");
+            rating = item.getDouble("rating");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (convertView == null) {
+            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            convertView = inflater.inflate(R.layout.list_item, parent, false);
+        }
+
+        textName = (TextView) convertView.findViewById(R.id.textName);
+        textRating = (TextView) convertView.findViewById(R.id.textRating);
+
+        textName.setText(name);
+        textRating.setText(rating + "");
+
+
         return convertView;
     }
 }

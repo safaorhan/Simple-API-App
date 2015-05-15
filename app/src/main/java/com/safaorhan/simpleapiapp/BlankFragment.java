@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 
 /**
@@ -12,13 +14,37 @@ import android.view.ViewGroup;
  */
 public class BlankFragment extends Fragment {
 
-    public BlankFragment() {
-    }
+    TextView textMessage;
+    Button buttonRetry;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_blank, container, false);
+        View view = inflater.inflate(R.layout.fragment_blank, container, false);
+
+        String message = getArguments().getString(Const.ARG_MESSAGE);
+        boolean hasRetryButton = getArguments().getBoolean(Const.ARG_HAS_RETRY_BUTTON);
+
+        textMessage = (TextView) view.findViewById(R.id.textMessage);
+        buttonRetry = (Button) view.findViewById(R.id.buttonRetry);
+
+        textMessage.setText(message);
+
+        if (hasRetryButton) {
+            buttonRetry.setVisibility(View.VISIBLE);
+
+            buttonRetry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((MainActivity) getActivity()).fetchVenues();
+                }
+            });
+        } else {
+            buttonRetry.setVisibility(View.GONE);
+        }
+
+
+        return view;
     }
 
 }
