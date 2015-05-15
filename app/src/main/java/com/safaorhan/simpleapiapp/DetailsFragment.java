@@ -20,7 +20,9 @@ import org.json.JSONObject;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment to show details and a photo of a venue.
+ * <p/>
+ * Gets venue data as arguments.
  */
 public class DetailsFragment extends Fragment {
     private static final String TAG = "DetailsFragment";
@@ -29,9 +31,6 @@ public class DetailsFragment extends Fragment {
 
     TextView textName, textAddress, textRating;
     ImageView imageView;
-
-    public DetailsFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,6 +67,13 @@ public class DetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Fetches url of and loads a photo of the venue with the given id.
+     * <p/>
+     * Uses photos API.
+     *
+     * @param id ID of venue whose photo to be fetched.
+     */
     private void fetchPhoto(String id) {
         String url = String.format(Const.URL_PHOTO, id);
 
@@ -78,10 +84,10 @@ public class DetailsFragment extends Fragment {
         params.put(Const.API_VERSION, Const.VERSION);
         params.put(Const.API_MODE, Const.MODE);
 
-        AsyncHttpClient exploreClient = new AsyncHttpClient();
+        AsyncHttpClient photoClient = new AsyncHttpClient();
 
 
-        exploreClient.get(url, params, new JsonHttpResponseHandler() {
+        photoClient.get(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 String url = null;
@@ -111,6 +117,14 @@ public class DetailsFragment extends Fragment {
 
     }
 
+
+    /**
+     * Extracts and builds the photo url from the given photos API response.
+     *
+     * @param response photos API response
+     * @return Url string of photo.
+     * @throws JSONException
+     */
     private String extractFirstPhotoUrlFromResponse(JSONObject response) throws JSONException {
         JSONObject photo = response.getJSONObject("response").getJSONObject("photos").getJSONArray("items").getJSONObject(0);
         return photo.getString("prefix") + "width300" + photo.getString("suffix");

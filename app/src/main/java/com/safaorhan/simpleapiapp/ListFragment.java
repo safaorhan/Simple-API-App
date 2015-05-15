@@ -2,7 +2,6 @@ package com.safaorhan.simpleapiapp;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,9 @@ import org.json.JSONException;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment to show a list of venues.
+ * <p/>
+ * Gets venue data as arguments.
  */
 public class ListFragment extends Fragment {
 
@@ -26,14 +27,9 @@ public class ListFragment extends Fragment {
 
     VenueAdapter mAdapter;
 
-    public ListFragment() {
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        Log.d(TAG, "onCreateView");
 
         View view = inflater.inflate(R.layout.fragment_list, container, false);
 
@@ -69,12 +65,5 @@ public class ListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(Const.ARG_DATA, mData);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        Log.d(TAG, "onResume");
     }
 }

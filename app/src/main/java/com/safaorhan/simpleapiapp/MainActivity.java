@@ -17,6 +17,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+/**
+ * This one and only activity of this application has a fragment container in it.
+ * <p/>
+ * With the help of the fragment replace functions it provides, fragments can replace themselves with others.
+ */
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = "MainActivity";
@@ -27,15 +32,14 @@ public class MainActivity extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
 
-        // Create global configuration and initialize ImageLoader with this config
+        // Create global configuration of universal image loader.
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
 
         setContentView(R.layout.activity_main);
 
         // If we're being restored from a previous state,
-        // then we don't need to do anything and should return or else
-        // we could end up with overlapping fragments.
+        // then we don't need to do anything and should return.
         if (savedInstanceState != null) {
             return;
         }
@@ -46,10 +50,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-
-
-    public void fetchVenues()
-    {
+    /**
+     * Executes the query to the 4SQ venues/explore API.
+     * After successful completion, pass data to {@link ListFragment}.
+     * If there occurs an error, switch to {@link BlankFragment}.
+     */
+    public void fetchVenues() {
         RequestParams params = new RequestParams();
 
         params.put(Const.API_NEAR, Const.NEAR);
@@ -60,7 +66,6 @@ public class MainActivity extends ActionBarActivity {
         params.put(Const.API_SECTION, Const.SECTION);
 
         AsyncHttpClient exploreClient = new AsyncHttpClient();
-        Log.e(TAG, Const.URL_EXPLORE);
 
         exploreClient.get(Const.URL_EXPLORE, params, new JsonHttpResponseHandler() {
             @Override
@@ -74,7 +79,6 @@ public class MainActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
                 showListScreen(data);
-                Log.e(TAG, "onSuccess");
             }
 
             @Override
@@ -92,8 +96,12 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    private void showListScreen(String data)
-    {
+    /**
+     * Replace the current fragment with {@link ListFragment}
+     *
+     * @param data Json String data to populate list view.
+     */
+    private void showListScreen(String data) {
         ListFragment listFragment = new ListFragment();
 
         Bundle args = new Bundle();
@@ -107,8 +115,13 @@ public class MainActivity extends ActionBarActivity {
         getSupportFragmentManager().executePendingTransactions();
     }
 
-    public void showBlankScreen(String message, boolean hasRetryButton)
-    {
+    /**
+     * Replace the current fragment with {@link BlankFragment}
+     *
+     * @param message        Message to be shown to user in the fragment.
+     * @param hasRetryButton Boolean flag to indicate that the fragment to be created has retry button.
+     */
+    public void showBlankScreen(String message, boolean hasRetryButton) {
         BlankFragment blankFragment = new BlankFragment();
 
         Bundle args = new Bundle();
@@ -123,8 +136,12 @@ public class MainActivity extends ActionBarActivity {
         getSupportFragmentManager().executePendingTransactions();
     }
 
-    public void showDetailScreen(String data)
-    {
+    /**
+     * Replace the current fragment with {@link DetailsFragment} adding current fragment to back stack.
+     *
+     * @param data Json String data to inflate the fragment with.
+     */
+    public void showDetailScreen(String data) {
         DetailsFragment detailsFragment = new DetailsFragment();
 
         Bundle args = new Bundle();
@@ -142,6 +159,13 @@ public class MainActivity extends ActionBarActivity {
         getSupportFragmentManager().executePendingTransactions();
     }
 
+    /**
+     * Little helper function that gets the whole response of venues/explore api, and extracts the part needed.
+     *
+     * @param response JSONObject response which is returned by venues/explore API.
+     * @return the JSONArray String data to populate views and fragments.
+     * @throws JSONException
+     */
     private String extractDataFromJSON(JSONObject response) throws JSONException {
         return response.getJSONObject("response").getJSONArray("groups").getJSONObject(0).getJSONArray("items").toString();
     }

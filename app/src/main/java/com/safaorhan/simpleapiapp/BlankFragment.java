@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * A fragment to show in container in case of errors, connection problems, etc.
+ *
+ * Gets message and hasRetryButton boolean as arguments to inflate itself as needed.
  */
 public class BlankFragment extends Fragment {
 
